@@ -101,7 +101,7 @@ const WEEKLY_AVG = [
 ];
 
 const radarData = [
-  { axis: "수면", v: 32 }, { axis: "심박/ANS", v: 11 },
+  { axis: "수면", v: 32 }, { axis: "심박", v: 11 },
   { axis: "활동", v: 79 }, { axis: "체온", v: 65 },
 ];
 
@@ -311,7 +311,7 @@ const CarePage = () => {
     <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
       <div><h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: C.text }}>맞춤 케어</h2><p style={{ margin: "3px 0 0", fontSize: 13, color: C.textMuted }}>56일간 데이터 기반 패턴 분석</p></div>
       <div style={{ display: "flex", gap: 6, background: C.bgWarm, padding: 4, borderRadius: 14 }}>
-        {[{ k: "type", l: "나의 유형" }, { k: "condition", l: "좋은 날의 조건" }, { k: "guide", l: "케어 가이드" }].map(t => (
+        {[{ k: "type", l: "나의 유형" }, { k: "condition", l: "좋은 날 vs 나쁜 날" }, { k: "guide", l: "케어 가이드" }].map(t => (
           <button key={t.k} onClick={() => setSection(t.k)} style={{ flex: 1, padding: "9px 4px", border: "none", borderRadius: 11, fontSize: 12, fontWeight: 600, cursor: "pointer", background: section === t.k ? C.surface : "transparent", color: section === t.k ? C.sage : C.textMuted, boxShadow: section === t.k ? "0 1px 6px rgba(0,0,0,0.06)" : "none" }}>{t.l}</button>
         ))}
       </div>
@@ -323,7 +323,7 @@ const CarePage = () => {
           <p style={{ fontSize: 24, fontWeight: 700, color: C.lavender, margin: 0 }}>자율신경 민감형</p>
           <p style={{ margin: "6px 0 0", fontSize: 12, color: C.textSoft }}>심박/ANS 축 89.5% · 수면 축 68.4% 이탈</p>
         </Card>
-        <AiBubble emoji="🔬"><strong>왜 자율신경 민감형?</strong><br/><br/>56일간 <strong>심박/ANS 축 이탈 89.5%</strong> (1위). bpm, 안정시심박, HRV, nremhr이 baseline 대비 ±1.5σ 벗어난 날이 거의 매일이에요. 수면(68.4%) 2위, 체온(35.1%) 3위, <strong>활동(21.1%)</strong>은 안정적.</AiBubble>
+        <AiBubble emoji="🔬"><strong>왜 자율신경 민감형인가?</strong><br/><br/>56일간 <strong>심박/ANS 축 이탈 89.5%</strong> (1위). bpm, 안정시심박, HRV, nremhr이 baseline 대비 ±1.5σ 벗어난 날이 거의 매일이에요. 수면(68.4%) 2위, 체온(35.1%) 3위, <strong>활동(21.1%)</strong>은 안정적.</AiBubble>
         <Card>
           <Head emoji="📉" title="축별 불안정도" sub="±1.5σ 이상 벗어난 비율"/>
           {[{ axis: "심박/자율신경", score: 89.5, rank: 1, color: C.coral },{ axis: "수면", score: 68.4, rank: 2, color: C.coral },{ axis: "체온", score: 35.1, rank: 3, color: C.amber },{ axis: "활동", score: 21.1, rank: 4, color: C.sage }].map((item, i) => (
@@ -335,8 +335,8 @@ const CarePage = () => {
           <div style={{ height: 200 }}><ResponsiveContainer><RadarChart data={radarData}><PolarGrid stroke={C.border}/><PolarAngleAxis dataKey="axis" tick={{ fill: C.textSoft, fontSize: 12 }}/><PolarRadiusAxis tick={false} axisLine={false} domain={[0,100]}/><Radar dataKey="v" stroke={C.lavender} strokeWidth={2} fill={C.lavender} fillOpacity={0.12} dot={{ r: 4, fill: C.lavender }}/></RadarChart></ResponsiveContainer></div>
         </Card>
         <Card>
-          <Head emoji="⚡" title="리스크 트리거 패턴" sub="동시 이탈 조합"/>
-          {[{ combo: "수면 + 심박/ANS 동시 이탈", freq: 26, care: "가장 빈번한 리스크 조합" },{ combo: "심박/ANS + 활동 동시 이탈", freq: 10, care: "자율신경 불안정 시 활동도 감소" },{ combo: "3개 축 동시 이탈", freq: 3, care: "가장 위험한 날" }].map((p, i) => (
+          <Head emoji="⚡" title="빈번한 이탈 조합 패턴" sub="동시 이탈 조합"/>
+          {[{ combo: "수면 + 심박/ANS 동시 이탈", freq: 26, care: "가장 빈번한 리스크 조합" },{ combo: "심박 + 활동 동시 이탈", freq: 10, care: "자율신경 불안정 시 활동도 감소" },{ combo: "3개 축 동시 이탈", freq: 3, care: "가장 위험한 날" }].map((p, i) => (
             <div key={i} style={{ padding: 14, borderRadius: 14, marginBottom: 8, background: C.bgWarm, border: `1px solid ${C.borderSoft}` }}><p style={{ margin: 0, fontSize: 14, fontWeight: 700, color: C.text }}>{p.combo}</p><p style={{ margin: "4px 0 6px", fontSize: 12, color: C.textMuted }}>{p.freq}일 (56일 중)</p><div style={{ padding: 8, borderRadius: 8, background: C.sageLight }}><p style={{ margin: 0, fontSize: 12, color: C.sageDark, fontWeight: 600 }}>💚 {p.care}</p></div></div>
           ))}
         </Card>
@@ -366,7 +366,7 @@ const CarePage = () => {
       </>)}
 
       {section === "guide" && (<>
-        <AiBubble emoji="💚"><strong>자율신경 민감형</strong> 맞춤 케어 가이드. 심박/ANS 안정화가 핵심.</AiBubble>
+        <AiBubble emoji="💚"><strong>자율신경 민감형</strong> 맞춤 케어 가이드. 심박 안정화가 핵심.</AiBubble>
         <Card style={{ borderLeft: `4px solid ${C.lavender}` }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}><Pill color={C.lavender}>최우선</Pill><span style={{ fontSize: 16, fontWeight: 700, color: C.text }}>🫁 자율신경 안정화</span></div>
           <p style={{ margin: "0 0 14px", fontSize: 13, color: C.textBody, lineHeight: 1.6 }}>심박/ANS 축 <strong>89.5% 이탈</strong>. 호흡과 이완 기법이 핵심.</p>
